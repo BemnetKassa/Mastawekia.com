@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import authRoutes from "./routes/authRoutes.js";
-
+import companyRoutes from "./src/routes/companyRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -15,6 +15,7 @@ app.use(morgan("dev"));
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/companies", companyRoutes);
 
 // Default route
 app.get("/", (req, res) => {
