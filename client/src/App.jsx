@@ -5,6 +5,9 @@ import Home from "./pages/Home";
 import Login from "./pages/login";
 import Register from "./pages/Register";
 import Jobs from "./pages/Jobs";
+import News from "./pages/News";
+
+
 function App() {
   const { user, logout } = useContext(AuthContext);
 
@@ -22,6 +25,7 @@ function App() {
             <>
             <Link to="/" className="hover:underline">Home</Link>
             <Link to="/jobs" className="hover:underline">Jobs</Link>
+            <Link to="/news" className="hover:underline">News</Link>
             <Link to="/register" className="hover:underline">Register</Link>
             <Link to="/login" className="hover:underline">Login</Link>
             </>
@@ -32,6 +36,7 @@ function App() {
       <div className="p-6">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/news" element={<News />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/jobs" element={<Jobs />} />
