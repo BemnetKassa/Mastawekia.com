@@ -6,7 +6,7 @@ import Login from "./pages/login";
 import Register from "./pages/Register";
 import Jobs from "./pages/Jobs";
 import News from "./pages/News";
-
+import Profile from "./pages/Profile";
 
 function App() {
   const { user, logout } = useContext(AuthContext);
@@ -28,6 +28,8 @@ function App() {
             <Link to="/news" className="hover:underline">News</Link>
             <Link to="/register" className="hover:underline">Register</Link>
             <Link to="/login" className="hover:underline">Login</Link>
+            <Link to="/profile" className="hover:underline">Profile</Link>
+            
             </>
           )}
         </div>
@@ -40,6 +42,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/jobs" element={<Jobs />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
     </Router>
