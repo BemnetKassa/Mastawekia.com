@@ -4,7 +4,7 @@ import { AuthContext } from "./context/AuthContext";
 import Home from "./pages/Home";
 import Login from "./pages/login";
 import Register from "./pages/Register";
-
+import Jobs from "./pages/Jobs";
 function App() {
   const { user, logout } = useContext(AuthContext);
 
@@ -20,8 +20,10 @@ function App() {
             </>
           ) : (
             <>
-              <Link to="/login">Login</Link>
-              <Link to="/register">Register</Link>
+            <Link to="/" className="hover:underline">Home</Link>
+            <Link to="/jobs" className="hover:underline">Jobs</Link>
+            <Link to="/register" className="hover:underline">Register</Link>
+            <Link to="/login" className="hover:underline">Login</Link>
             </>
           )}
         </div>
@@ -32,6 +34,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/jobs" element={<Jobs />} />
         </Routes>
       </div>
     </Router>
