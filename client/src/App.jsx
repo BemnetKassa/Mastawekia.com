@@ -8,7 +8,7 @@ import Jobs from "./pages/Jobs";
 import News from "./pages/News";
 import Profile from "./pages/Profile";
 import PostJob from "./pages/PostJob";
-import
+import PostNews from "./pages/PostNews";
 
 
 function App() {
