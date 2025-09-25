@@ -8,6 +8,7 @@ import Jobs from "./pages/Jobs";
 import News from "./pages/News";
 import Profile from "./pages/Profile";
 import PostJob from "./pages/PostJob";
+import
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
             <Link to="/login" className="hover:underline">Login</Link>
             <Link to="/profile" className="hover:underline">Profile</Link>
             <Link to="/post-job" className="hover:underline">Post Job</Link>
+            <Link to="/post-news" className="hover:underline">Post News</Link>
             
             </>
           )}
@@ -47,6 +49,7 @@ function App() {
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/post-job" element={<PostJob />} />
+          <Route path="/post-news" element={<PostNews />} />
         </Routes>
       </div>
     </Router>
