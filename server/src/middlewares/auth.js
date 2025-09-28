@@ -1,33 +1,42 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import User from "../models/User.js"; // ✅ import User model
 
 dotenv.config();
 
-export const verifyToken = (req, res, next) => {
-    const authHeader = req.headers("Authorization");
-    const token = authHeader && authHeader.split(" ")[1];
+// Verify JWT and attach full user object
+export const verifyToken = async (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
 
-    if (!token) {
-        return res.status(401).json({ message: "Access Denied" });
+  if (!token) {
+    return res.status(401).json({ message: "Access Denied: No token provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Fetch user from DB (exclude password)
+    const user = await User.findById(decoded.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-    try {
-        const verified = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = verified;
-        next();
-    }catch (err) {
-        res.status(400).json({ message: "Invalid Token" });
-    }
 
-}
-
-    //roll based access control (user, client, admin)
-export const requireRole = (roles) => {
-    return (req, res, next) => {
-        if (!roles.includes(req.user.role)){
-
-            return res.status(403).json({ message: "Forbidden: insufficient role"});
-        }
-        next();
-
+    req.user = user; // ✅ attach real user object
+    next();
+  } catch (err) {
+    res.status(401).json({ message: "Invalid or expired token" });
+  }
 };
+
+// Role-based Access Control
+export const requireRole = (roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res
+        .status(403)
+        .json({ message: "Forbidden: insufficient role" });
+    }
+    next();
+  };
 };
