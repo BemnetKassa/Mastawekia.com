@@ -25,6 +25,8 @@ model User {
   // Relation
   companies Company[]
   employerJobs Job[] @relation("EmployerJobs")
+
+  Application Application[]
 }
 
 model Company {
