@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import authRoutes from "./src/routes/authRoutes.js";
 import companyRoutes from "./src/routes/companyRoutes.js";
-import routes from "./routes/index.js";
+import routes from "./src/routes/index.js";
 
 dotenv.config();
 const app = express();

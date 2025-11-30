@@ -1,8 +1,83 @@
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import prisma from "../config/prisma.js";
 
+const prisma = new PrismaClient();
 dotenv.config();
+
+const signToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_SECRET || "devsecret", { expiresIn: "7d" });
+
+export const register = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    if (!name || !email || !password)
+      return res.status(400).json({ message: "Missing fields" });
+
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing)
+      return res.status(400).json({ message: "User already exists" });
+
+    const hashed = await bcrypt.hash(password, 10);
+    const user = await prisma.user.create({
+      data: { name, email, password: hashed },
+      select: { id: true, name: true, email: true, role: true },
+    });
+
+    const token = signToken(user.id);
+    return res.status(201).json({ user, token });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password)
+      return res.status(400).json({ message: "Missing fields" });
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) return res.status(400).json({ message: "Invalid credentials" });
+
+    const token = signToken(user.id);
+    const safeUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+    return res.json({ user: safeUser, token });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+export const me = async (req, res) => {
+  try {
+    // expects your auth middleware to set req.user = { id }
+    const id = req.user?.id;
+    if (!id) return res.status(401).json({ message: "Not authenticated" });
+
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+    });
+    return res.json({ user });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
 
 // Verify JWT and fetch user from DB
 export const verifyToken = async (req, res, next) => {
