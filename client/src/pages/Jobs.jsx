@@ -50,25 +50,27 @@ export default function Jobs() {
     }
   };
 
-  return (
-    <Container className="py-6">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-blue-600">Job Openings</h1>
-          <p className="text-sm text-gray-600 mt-1">{jobs.length} results</p>
-        </div>
+    return (
+    <Container className="py-10">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold text-primary">Find Your Next Job</h1>
+        <p className="text-gray-600 mt-1">{jobs.length} jobs available</p>
+      </div>
 
-        <div className="flex items-center gap-3">
+      {/* Search & Filters */}
+      <div className="card mb-8">
+        <div className="flex flex-col md:flex-row items-center gap-4">
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search title, company or location"
-            className="border rounded px-3 py-2"
+            className="w-full"
           />
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
-            className="border rounded px-2 py-2"
+            className="w-full md:w-auto"
           >
             <option value="newest">Newest</option>
             <option value="oldest">Oldest</option>
@@ -76,27 +78,30 @@ export default function Jobs() {
         </div>
       </div>
 
+      {/* Job Cards */}
       {loading && jobs.length === 0 ? (
-        <div className="text-center text-gray-500">Loading jobs...</div>
+        <p className="text-center text-gray-500 py-10">Loading jobs...</p>
       ) : jobs.length === 0 ? (
-        <div className="text-gray-600">No jobs found.</div>
+        <p className="text-gray-600">No jobs found.</p>
       ) : (
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {jobs.map((job) => (
             <JobCard key={job.id} job={job} onApply={handleApply} />
           ))}
         </div>
       )}
 
-      <div className="mt-6 flex justify-center">
+      {/* Load More */}
+      <div className="mt-10 flex justify-center">
         <Button
           onClick={() => loadJobs({ reset: false })}
-          className="px-6"
           disabled={loading}
+          className="btn-primary px-6 py-2"
         >
-          {loading ? "Loading..." : "Load more"}
+          {loading ? "Loading..." : "Load More"}
         </Button>
       </div>
     </Container>
   );
+
 }

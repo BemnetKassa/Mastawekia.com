@@ -40,40 +40,21 @@ export default function Login() {
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 shadow-md rounded-xl w-full max-w-md"
-      >
-        <h2 className="text-xl font-bold mb-4">Login</h2>
-        {error && <div className="text-red-600 mb-3">{error}</div>}
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full mb-3 p-2 border rounded-lg"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full mb-3 p-2 border rounded-lg"
-          required
-        />
-        <button
-          type="submit"
-          className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 disabled:opacity-60"
-          disabled={loading}
-        >
+    return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200">
+      <form className="card w-full max-w-md" onSubmit={handleSubmit}>
+        <h2 className="text-2xl font-bold text-center mb-6">Welcome Back</h2>
+
+        {error && <p className="text-red-600 mb-3">{error}</p>}
+
+        <input type="email" name="email" placeholder="Email" onChange={handleChange} className="w-full mb-4" />
+        <input type="password" name="password" placeholder="Password" onChange={handleChange} className="w-full mb-4" />
+
+        <button className="btn-primary w-full" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>
     </div>
   );
+
 }
