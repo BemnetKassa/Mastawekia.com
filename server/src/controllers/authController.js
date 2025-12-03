@@ -28,7 +28,10 @@ export const register = async (req, res) => {
     const token = signToken(user.id);
     return res.status(201).json({ user, token });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    console.error("[authController.register]", err);
+    const body = { message: err.message };
+    if (process.env.NODE_ENV !== "production") body.stack = err.stack;
+    return res.status(500).json(body);
   }
 };
 
@@ -53,7 +56,10 @@ export const login = async (req, res) => {
     };
     return res.json({ user: safeUser, token });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    console.error("[authController.login]", err);
+    const body = { message: err.message };
+    if (process.env.NODE_ENV !== "production") body.stack = err.stack;
+    return res.status(500).json(body);
   }
 };
 
@@ -75,7 +81,10 @@ export const me = async (req, res) => {
     });
     return res.json({ user });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    console.error("[authController.me]", err);
+    const body = { message: err.message };
+    if (process.env.NODE_ENV !== "production") body.stack = err.stack;
+    return res.status(500).json(body);
   }
 };
 
