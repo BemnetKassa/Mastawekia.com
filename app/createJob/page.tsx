@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createJob } from "../lib/api";
+import { createJob } from "../../features/createJob/api";
 
 export default function CreateJobPage() {
   const [title, setTitle] = useState("");
