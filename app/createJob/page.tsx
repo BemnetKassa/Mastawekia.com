@@ -1,9 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { createJob } from "../../features/createJob/api";
 
 export default function CreateJobPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      router.push("/auth/login");
+    }
+  }, []);
+
   const [title, setTitle] = useState("");
   const [company, setCompany] = useState("");
   const [description, setDescription] = useState("");
