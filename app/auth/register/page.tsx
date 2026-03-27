@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { registerUser } from "../../features/auth/api";
+import { registerUser } from "../../../features/auth/registerApi";
 
 
 export default function RegisterPage() {
@@ -15,8 +15,8 @@ export default function RegisterPage() {
 
   const handleRegister = async () => {
     await registerUser({ email, password, role });
-    alert("Regisered successfully!");
-    router.push("/login");
+    alert("Registered successfully!");
+    router.push("/auth/login");
   };
 
   return (
@@ -44,7 +44,9 @@ export default function RegisterPage() {
         <option value="USER">User</option>
         <option value="CLIENT">Client</option>
       </select>
-      <button className="bg-black text-white p-2 w-full">Register</button>
+      <button onClick={handleRegister} className="bg-black text-white border-white p-2 w-full">
+        Register
+      </button>
     </div>
-  )
+  );
 }
