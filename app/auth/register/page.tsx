@@ -14,6 +14,11 @@ export default function RegisterPage() {
   const [role, setRole] = useState("USER");
 
   const handleRegister = async () => {
+    if (!email || !password || !role) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
     await registerUser({ email, password, role });
     alert("Registered successfully!");
     router.push("/auth/login");
