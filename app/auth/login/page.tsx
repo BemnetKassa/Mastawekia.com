@@ -61,9 +61,9 @@ export default function LoginPage() {
       alert("Logged in successfully!");
 
       if (role === "CLIENT") {
-        router.push("/createJob");
+        router.push("/client/createJob");
       } else {
-        router.push("/jobListing");
+        router.push("/user/jobListing");
       }
     } catch (error: unknown) {
       const message =

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getJobs } from "../../features/jobListing/api";
-import { applyToJob } from "../../features/apply/applyForJob";
+import { getJobs } from "../../../features/jobListing/api";
+import { applyToJob } from "../../../features/apply/applyForJob";
 
 export default function JobsPage() {
   const router = useRouter();

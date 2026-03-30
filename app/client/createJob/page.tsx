@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createJob } from "../../features/createJob/api";
+import { createJob } from "../../../features/createJob/api";
 
 export default function CreateJobPage() {
   const router = useRouter();
