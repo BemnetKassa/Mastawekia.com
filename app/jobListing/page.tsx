@@ -2,15 +2,30 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getJobs } from "../../features/jobListing/api";
+import { getJobs, applyToJob } from "../../features/jobListing/api";
 
 export default function JobsPage() {
   const router = useRouter();
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState<any[]>([]);
 
   useEffect(() => {
-    getJobs().then(setJobs);
+    getJobs().then(setJobs).catch(() => {
+      alert("Failed to load jobs.");
+    });
   }, []);
+
+  const handleApply = async (jobId: string) => {
+    try {
+      const res = await applyToJob(jobId);
+      if (res?.success) {
+        alert("Application successful!");
+      } else {
+        alert("Application failed: " + (res?.message || "Unknown error"));
+      }
+    } catch (error: unknown) {
+      alert(error instanceof Error ? error.message : "Application failed.");
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -63,6 +78,13 @@ export default function JobsPage() {
                 <p className="mt-4 text-sm text-slate-400">
                   Explore the full role details and requirements inside the job post.
                 </p>
+
+                <button
+                  onClick={() => handleApply(job.id)}
+                  className="mt-4 rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                >
+                  Apply
+                </button>
               </div>
             ))
           )}
