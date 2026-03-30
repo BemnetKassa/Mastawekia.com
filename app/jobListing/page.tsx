@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getJobs, applyToJob } from "../../features/jobListing/api";
+import { getJobs } from "../../features/jobListing/api";
+import { applyToJob } from "../../features/apply/applyForJob";
 
 export default function JobsPage() {
   const router = useRouter();
@@ -17,11 +18,7 @@ export default function JobsPage() {
   const handleApply = async (jobId: string) => {
     try {
       const res = await applyToJob(jobId);
-      if (res?.success) {
-        alert("Application successful!");
-      } else {
-        alert("Application failed: " + (res?.message || "Unknown error"));
-      }
+      alert(res?.message || "Application successful!");
     } catch (error: unknown) {
       alert(error instanceof Error ? error.message : "Application failed.");
     }
