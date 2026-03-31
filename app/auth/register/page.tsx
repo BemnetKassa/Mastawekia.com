@@ -27,6 +27,9 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen px-6 py-12">
+      <Link href="/" className="mb-2 ml-4 border border-white/15 px-2 py-2 text-xs uppercase tracking-[0.3em] text-slate-200 transition hover:border-amber-300 hover:text-amber-200">
+        Back to Home
+      </Link>
       <div className="mx-auto grid w-full max-w-5xl gap-10 lg:grid-cols-[0.95fr_1.05fr]">
         <div className="glass-panel accent-ring rounded-3xl p-8">
           <h2 className="font-display text-2xl text-white">Create your account</h2>

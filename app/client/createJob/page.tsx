@@ -32,7 +32,7 @@ export default function CreateJobPage() {
 
   return (
     <div className="min-h-screen px-6 py-12">
-      <div className="mx-auto w-full max-w-5xl space-y-10">
+      <div className="mx-auto w-full max-w-100% space-y-10">
         <header className="flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-amber-200">Client Studio</p>

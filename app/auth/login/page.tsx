@@ -74,6 +74,9 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen px-6 py-12">
+      <Link href="/" className="mb-4 mx-4 inline-block rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-200 transition hover:border-amber-300 hover:text-amber-200">
+        Back to Home
+      </Link>
       <div className="mx-auto grid w-full max-w-5xl gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="space-y-6">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.3em] text-amber-200">
