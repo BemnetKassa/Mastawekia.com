@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getJobs } from "../../../features/jobListing/api";
 import { applyToJob } from "../../../features/apply/applyForJob";
+import Link from "next/link";
 
 export default function JobsPage() {
   const router = useRouter();
@@ -15,6 +16,17 @@ export default function JobsPage() {
     });
   }, []);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+
+      alert("Please login again to access the user dashboard.");
+      router.push("/auth/login");
+    }
+
+  }, [router]);
+
   const handleApply = async (jobId: string) => {
     try {
       const res = await applyToJob(jobId);
@@ -24,13 +36,13 @@ export default function JobsPage() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    router.push("/auth/login");
-  };
+
 
   return (
     <div className="min-h-screen px-6 py-12">
+      <Link href="/user" className="mb-6 inline-block rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-200 transition hover:border-amber-300 hover:text-amber-200">
+        Back to Dashboard
+      </Link>
       <div className="mx-auto w-full max-w-6xl space-y-10">
         <header className="flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -42,12 +54,7 @@ export default function JobsPage() {
               Hand-picked opportunities updated in real time.
             </p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-200 transition hover:border-amber-300 hover:text-amber-200"
-          >
-            Logout
-          </button>
+
         </header>
 
         <section className="grid gap-6 lg:grid-cols-2">
