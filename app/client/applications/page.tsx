@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { getApplications } from "../../../features/apply/getApplications";
+import { updateApplicationStatus } from "../../../features/apply/applicationStatus"
 import { useRouter } from "next/navigation";
+
+
 
 type Application = {
   id: string | number;
@@ -40,6 +43,8 @@ export default function ApplicationsPage() {
       });
   }, [router]);
 
+
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Applications</h1>
@@ -50,6 +55,26 @@ export default function ApplicationsPage() {
         <div key={String(app.id)} className="border p-4 mb-3">
           <p><strong>Job:</strong> {app.job?.title || "N/A"}</p>
           <p><strong>Applicant:</strong> {app.user?.email || "N/A"}</p>
+          <button
+            onClick={() => {
+              alert("Application accepted!");
+              updateApplicationStatus(app.id, "ACCEPTED")
+            }
+            }
+            className="bg-green-500 text-white p-2 mr-2"
+          >
+            Accept
+          </button>
+
+          <button
+            onClick={() => {
+              alert("Application rejected!");
+              updateApplicationStatus(app.id, "REJECTED");
+            }}
+            className="bg-red-500 text-white p-2"
+          >
+            Reject
+          </button>
         </div>
       ))}
     </div>
