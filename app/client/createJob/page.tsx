@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createJob } from "../../../features/createJob/api";
+import RichTextEditor from "../../../component/ui/RichTextEditor";
 
 export default function CreateJobPage() {
   const router = useRouter();
@@ -70,10 +71,10 @@ export default function CreateJobPage() {
               <label className="block text-xs uppercase tracking-[0.25em] text-slate-400">
                 Description
               </label>
-              <textarea
+              <RichTextEditor
+                value={description}
+                onChange={setDescription}
                 placeholder="Describe the mission, responsibilities, and perks."
-                onChange={(e) => setDescription(e.target.value)}
-                className="min-h-40 w-full rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/80"
               />
             </div>
             <button

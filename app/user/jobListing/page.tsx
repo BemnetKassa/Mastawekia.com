@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { getJobs } from "../../../features/jobListing/api";
 import { applyToJob } from "../../../features/apply/applyForJob";
 import Link from "next/link";
+import DOMPurify from "dompurify";
 
 export default function JobsPage() {
   const router = useRouter();
@@ -208,10 +209,15 @@ export default function JobsPage() {
                     Open
                   </span>
                 </div>
-                <p className="mt-4 text-sm text-slate-400">
-                  {job.description ||
-                    "Explore the full role details and requirements inside the job post."}
-                </p>
+                <div
+                  className="rich-text mt-4 text-sm text-slate-400"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(
+                      job.description ||
+                      "Explore the full role details and requirements inside the job post."
+                    ),
+                  }}
+                />
 
                 {job.applications?.length > 0 ? (
                   <button
