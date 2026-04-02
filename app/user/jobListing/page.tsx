@@ -31,6 +31,7 @@ export default function JobsPage() {
     try {
       const res = await applyToJob(jobId);
       alert(res?.message || "Application successful!");
+      window.location.reload();
     } catch (error: unknown) {
       alert(error instanceof Error ? error.message : "Application failed.");
     }
@@ -83,12 +84,15 @@ export default function JobsPage() {
                   Explore the full role details and requirements inside the job post.
                 </p>
 
-                <button
-                  onClick={() => handleApply(job.id)}
-                  className="mt-4 rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                >
-                  Apply
-                </button>
+                {job.applications?.length > 0 ? (
+                  <button disabled className="bg-gray-400 p-2">
+                    Applied
+                  </button>
+                ) : (
+                  <button onClick={() => applyToJob(job.id)} className="bg-blue-500 p-2">
+                    Apply
+                  </button>
+                )}
               </div>
             ))
           )}
