@@ -9,7 +9,6 @@ import Link from "next/link";
 export default function JobsPage() {
   const router = useRouter();
   const [jobs, setJobs] = useState<any[]>([]);
-  const [appliedJobIds, setAppliedJobIds] = useState<string[]>([]);
 
   useEffect(() => {
     getJobs().then(setJobs).catch(() => {
@@ -33,8 +32,17 @@ export default function JobsPage() {
       const res = await applyToJob(jobId);
       if (res) {
         alert("Application successful!");
-        setAppliedJobIds((prev) =>
-          prev.includes(jobId) ? prev : [...prev, jobId]
+        setJobs((prev) =>
+          prev.map((job) =>
+            String(job.id) === jobId
+              ? {
+                ...job,
+                applications: Array.isArray(job.applications)
+                  ? [...job.applications, { id: "local" }]
+                  : [{ id: "local" }],
+              }
+              : job
+          )
         );
       }
       else {
@@ -92,7 +100,7 @@ export default function JobsPage() {
                   Explore the full role details and requirements inside the job post.
                 </p>
 
-                {job.applications?.length > 0 || appliedJobIds.includes(String(job.id)) ? (
+                {job.applications?.length > 0 ? (
                   <button disabled className="bg-gray-400 p-2">
                     Applied
                   </button>

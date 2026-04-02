@@ -43,64 +43,55 @@ export default function ApplicationsPage() {
       });
   }, [router]);
 
-  const handleStatusChange = async (id: string | number, status: "ACCEPTED" | "REJECTED") => {
-    const res = await updateApplicationStatus(id, status);
-    if (res.status === "success") {
+  return (
+    <div className="min-h-screen px-6 py-12">
 
+      <header className="flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-xs uppercase tracking-[0.3em] text-amber-200">Client Studio</p>
+          <h1 className="font-display text-3xl text-white">Applications</h1>
+          <p className="mt-2 text-sm text-slate-300">
+            Review and manage applications from candidates who have applied to your job listings.
+          </p>
+        </div>
 
-    }
-
-    return (
-      <div className="min-h-screen px-6 py-12">
-
-        <header className="flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-6 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-amber-200">Client Studio</p>
-            <h1 className="font-display text-3xl text-white">Applications</h1>
-            <p className="mt-2 text-sm text-slate-300">
-              Review and manage applications from candidates who have applied to your job listings.
-            </p>
-          </div>
-
-          <a href="/client" className="mb-6 inline-block rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-200 transition hover:border-amber-300 hover:text-amber-200">
-            back to dashboard
-          </a>
-        </header>
+        <a href="/client" className="mb-6 inline-block rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-200 transition hover:border-amber-300 hover:text-amber-200">
+          back to dashboard
+        </a>
+      </header>
 
 
 
-        <h1 className="text-2xl font-bold mb-4">Applications</h1>
+      <h1 className="text-2xl font-bold my-4">Applications</h1>
 
-        {applications.length === 0 && <p>No applications yet</p>}
+      {applications.length === 0 && <p>No applications yet</p>}
 
-        {applications.map((app) => (
-          <div key={String(app.id)} className="border p-4 mb-3">
-            <p><strong>Job:</strong> {app.job?.title || "N/A"}</p>
-            <p><strong>Applicant:</strong> {app.user?.email || "N/A"}</p>
-            <button
-              onClick={() => {
-                alert("Application accepted!");
-                updateApplicationStatus(app.id, "ACCEPTED")
-              }
-              }
-              className="bg-green-500 text-white p-2 mr-2"
-            >
-              Accept
-            </button>
+      {applications.map((app) => (
+        <div key={String(app.id)} className="border p-4 mb-3">
+          <p><strong>Job:</strong> {app.job?.title || "N/A"}</p>
+          <p><strong>Applicant:</strong> {app.user?.email || "N/A"}</p>
+          <button
+            onClick={() => {
+              alert("Application accepted!");
+              updateApplicationStatus(app.id, "ACCEPTED")
+            }
+            }
+            className="bg-green-500 text-white p-2 mr-2"
+          >
+            Accept
+          </button>
 
-            <button
-              onClick={() => {
-                alert("Application rejected!");
-                updateApplicationStatus(app.id, "REJECTED");
-              }}
-              className="bg-red-500 text-white p-2"
-            >
-              Reject
-            </button>
-          </div>
-        ))}
-
-
-      </div>
-    );
-  }
+          <button
+            onClick={() => {
+              alert("Application rejected!");
+              updateApplicationStatus(app.id, "REJECTED");
+            }}
+            className="bg-red-500 text-white p-2"
+          >
+            Reject
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+};
