@@ -9,6 +9,7 @@ import Link from "next/link";
 export default function JobsPage() {
   const router = useRouter();
   const [jobs, setJobs] = useState<any[]>([]);
+  const [appliedJobIds, setAppliedJobIds] = useState<string[]>([]);
 
   useEffect(() => {
     getJobs().then(setJobs).catch(() => {
@@ -30,8 +31,15 @@ export default function JobsPage() {
   const handleApply = async (jobId: string) => {
     try {
       const res = await applyToJob(jobId);
-      alert(res?.message || "Application successful!");
-      window.location.reload();
+      if (res) {
+        alert("Application successful!");
+        setAppliedJobIds((prev) =>
+          prev.includes(jobId) ? prev : [...prev, jobId]
+        );
+      }
+      else {
+        alert("Application failed. Please try again.");
+      }
     } catch (error: unknown) {
       alert(error instanceof Error ? error.message : "Application failed.");
     }
@@ -84,12 +92,12 @@ export default function JobsPage() {
                   Explore the full role details and requirements inside the job post.
                 </p>
 
-                {job.applications?.length > 0 ? (
+                {job.applications?.length > 0 || appliedJobIds.includes(String(job.id)) ? (
                   <button disabled className="bg-gray-400 p-2">
                     Applied
                   </button>
                 ) : (
-                  <button onClick={() => applyToJob(job.id)} className="bg-blue-500 p-2">
+                  <button onClick={() => handleApply(String(job.id))} className="bg-blue-500 p-2">
                     Apply
                   </button>
                 )}

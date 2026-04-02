@@ -41,12 +41,11 @@ export default function CreateJobPage() {
               Write a role that stands out and attracts the right applicants.
             </p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-200 transition hover:border-amber-300 hover:text-amber-200"
-          >
-            Logout
-          </button>
+
+          <a href="/client" className="mb-6 inline-block rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-200 transition hover:border-amber-300 hover:text-amber-200">
+            back to dashboard
+          </a>
+
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">

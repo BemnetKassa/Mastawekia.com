@@ -1,6 +1,6 @@
 const API = process.env.NEXT_PUBLIC_API_URL;
 
-export const updateApplicationStatus = async (id, status) => {
+export const updateApplicationStatus = async (id: string | number, status: "ACCEPTED" | "REJECTED") => {
   const token = localStorage.getItem("token");
 
   const res = await fetch(`${API}/applications/${id}`, {
