@@ -11,6 +11,7 @@ import MetricCard from "../../component/ui/MetricCard";
 const navLinks: DashboardNavLink[] = [
   { href: "/user", label: "Overview" },
   { href: "/user/jobListing", label: "Job listing" },
+  { href: "/user/myApplications", label: "My applications" },
 ];
 
 const metrics = [
@@ -91,6 +92,13 @@ export default function UserPage() {
                 description="Add a recent project or new skills."
                 cta="Edit profile"
               />
+              <ActionCard
+                href="/user/myApplications"
+                title="Review your applications"
+                description="Check the status of your current applications."
+                cta="My applications"
+              />
+
             </div>
           </div>
 
