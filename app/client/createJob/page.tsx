@@ -29,7 +29,7 @@ export default function CreateJobPage() {
         console.error("Failed to fetch companies:", error);
       }
     };
-    
+
     fetchCompanies();
   }, [router]);
 
