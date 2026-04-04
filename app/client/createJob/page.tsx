@@ -1,24 +1,39 @@
 "use client";
 
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createJob } from "../../../features/createJob/api";
+import { getMyCompanies } from "../../../features/company/api";
 import RichTextEditor from "../../../component/ui/RichTextEditor";
 
 export default function CreateJobPage() {
   const router = useRouter();
+
+  const [companies, setCompanies] = useState<any[]>([]);
+  const [companyId, setCompanyId] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (!token) {
       router.push("/auth/login");
+      return;
     }
+
+    const fetchCompanies = async () => {
+      try {
+        const data = await getMyCompanies();
+        setCompanies(data);
+        if (data.length > 0) setCompanyId(data[0].id);
+      } catch (error) {
+        console.error("Failed to fetch companies:", error);
+      }
+    };
+    
+    fetchCompanies();
   }, [router]);
 
   const [title, setTitle] = useState("");
-  const [company, setCompany] = useState("");
   const [description, setDescription] = useState("");
 
   const handleLogout = () => {
@@ -27,7 +42,12 @@ export default function CreateJobPage() {
   };
 
   const handleSubmit = async () => {
-    await createJob({ title, company, description });
+    if (!companyId) {
+      alert("Please select or create a company to post a job.");
+      return;
+    }
+    // Update payload based on the migration: sending companyId
+    await createJob({ companyId, title, description });
     alert("Job created!");
   };
 
@@ -63,11 +83,36 @@ export default function CreateJobPage() {
               <label className="block text-xs uppercase tracking-[0.25em] text-slate-400">
                 Company
               </label>
-              <input
-                placeholder="Atlas Studio"
-                onChange={(e) => setCompany(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/80"
-              />
+              {companies.length === 0 ? (
+                <div className="rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100">
+                  <p className="text-sm text-amber-400">
+                    No companies created yet.{" "}
+                    <a href="/client/company" className="underline hover:text-amber-200">
+                      Create one
+                    </a>{" "}
+                    first.
+                  </p>
+                </div>
+              ) : (
+                <select
+                  value={companyId}
+                  onChange={(e) => {
+                    if (e.target.value === "CREATE_NEW") {
+                      router.push("/client/company");
+                    } else {
+                      setCompanyId(e.target.value);
+                    }
+                  }}
+                  className="w-full rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400/80"
+                >
+                  {companies.map((c: any) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                  <option value="CREATE_NEW">+ Create a new company</option>
+                </select>
+              )}
               <label className="block text-xs uppercase tracking-[0.25em] text-slate-400">
                 Description
               </label>

@@ -6,7 +6,7 @@ export const getMyCompanies = async () => {
     throw new Error("No token found");
   }
 
-  const res = await fetch(`${API}/companies/me`, {
+  const res = await fetch(`${API}/company/me`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -23,7 +23,7 @@ export const createCompany = async (data: { name: string; description: string })
     throw new Error("No token found");
   }
 
-  const res = await fetch(`${API}/companies`, {
+  const res = await fetch(`${API}/company`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
