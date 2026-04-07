@@ -219,21 +219,29 @@ export default function JobsPage() {
                   }}
                 />
 
-                {job.applications?.length > 0 ? (
-                  <button
-                    disabled
-                    className="mt-4 rounded-full bg-slate-700/70 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-200"
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  {job.applications?.length > 0 ? (
+                    <button
+                      disabled
+                      className="rounded-full bg-slate-700/70 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-200"
+                    >
+                      Applied
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleApply(String(job.id))}
+                      className="rounded-full bg-emerald-400 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-slate-900 transition hover:-translate-y-0.5 hover:bg-emerald-300"
+                    >
+                      Apply
+                    </button>
+                  )}
+                  <Link
+                    href={`/user/jobListing/${job.id}`}
+                    className="rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-200 transition hover:border-amber-300 hover:text-amber-200"
                   >
-                    Applied
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => handleApply(String(job.id))}
-                    className="mt-4 rounded-full bg-emerald-400 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-slate-900 transition hover:-translate-y-0.5 hover:bg-emerald-300"
-                  >
-                    Apply
-                  </button>
-                )}
+                    View details
+                  </Link>
+                </div>
               </div>
             ))
           )}
