@@ -42,7 +42,7 @@ export default function RichTextEditor({
 
     const current = editor.getHTML();
     if (value && current !== value) {
-      editor.commands.setContent(value, false);
+      editor.commands.setContent(value, { emitUpdate: false });
     }
   }, [editor, value]);
 

@@ -52,7 +52,7 @@ export default function LandingPage() {
           </p>
           <div className="fade-up flex flex-wrap gap-4" style={{ animationDelay: "0.2s" }}>
             <a
-              href="/jobListing"
+              href="/user/jobListing"
               className="rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:-translate-y-0.5"
             >
               Explore jobs
@@ -192,7 +192,7 @@ export default function LandingPage() {
                 Get started
               </a>
               <a
-                href="/jobListing"
+                href="/user/jobListing"
                 className="rounded-2xl border border-white/20 px-6 py-3 text-sm font-semibold text-white transition hover:border-amber-300 hover:text-amber-200"
               >
                 Browse jobs
