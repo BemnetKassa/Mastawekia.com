@@ -12,6 +12,7 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const decodeJwtPayload = (token: string): Record<string, unknown> | null => {
     try {
@@ -49,6 +50,7 @@ export default function LoginPage() {
     }
 
     try {
+      setLoading(true);
       const res = await loginUser({ email, password });
 
       if (typeof res?.access_token !== "string") {
@@ -128,9 +130,10 @@ export default function LoginPage() {
           </div>
           <button
             onClick={handleLogin}
+            disabled={loading}
             className="mt-6 w-full rounded-2xl bg-amber-400 px-4 py-3 text-sm font-semibold text-slate-900 transition hover:-translate-y-0.5 hover:bg-amber-300"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
           <p className="mt-4 text-xs text-slate-400">
             New here?{" "}
