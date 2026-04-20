@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginUser } from "../../../features/auth/loginApi";
 import Link from "next/link";
+import { getUserRole } from "../../../lib/auth";
 
 
 
@@ -15,34 +16,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const decodeJwtPayload = (token: string): Record<string, unknown> | null => {
-    try {
-      const parts = token.split(".");
-      if (parts.length < 2) {
-        return null;
-      }
-
-      const base64Url = parts[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const paddedBase64 = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
-
-      return JSON.parse(atob(paddedBase64)) as Record<string, unknown>;
-    } catch {
-      return null;
-    }
-  };
-
-  const resolveUserRole = (payload: any): string => {
-    const tokenPayload =
-      typeof payload?.access_token === "string"
-        ? decodeJwtPayload(payload.access_token)
-        : null;
-
-    const rawRole =
-      tokenPayload?.role ?? payload?.role ?? payload?.user?.role ?? payload?.data?.role;
-
-    return typeof rawRole === "string" ? rawRole.trim().toUpperCase() : "";
-  };
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -58,14 +31,17 @@ export default function LoginPage() {
         throw new Error("Login response is missing access token.");
       }
 
-      const role = resolveUserRole(res);
-
       localStorage.setItem("token", res.access_token);
       alert("Logged in successfully!");
 
-      if (role === "CLIENT") {
+      const role = getUserRole(res.access_token);
+      if (!role) {
+        throw new Error("Unable to determine user role from token.");
+      }
+      else if (role === "CLIENT") {
         router.push("/client");
-      } else {
+      }
+      else if (role === "USER") {
         router.push("/user");
       }
     } catch (err: any) {

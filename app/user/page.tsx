@@ -7,6 +7,7 @@ import DashboardShell from "../../component/shared/DashboardShell";
 import type { DashboardNavLink } from "../../component/shared/DashboardNav";
 import ActionCard from "../../component/ui/ActionCard";
 import MetricCard from "../../component/ui/MetricCard";
+import { getUserRole } from "../../lib/auth";
 
 const navLinks: DashboardNavLink[] = [
   { href: "/user", label: "Overview" },
@@ -29,7 +30,15 @@ export default function UserPage() {
     if (!token) {
       alert("Please login again to access the user dashboard.");
       router.push("/auth/login");
+      return;
     }
+    const role = getUserRole(token);
+    if (role !== "USER") {
+      alert("Unauthorized access. Please login with a user account.");
+      router.push("/auth/login");
+      return;
+    }
+
   }, [router]);
 
   const handleLogout = () => {

@@ -27,7 +27,7 @@ export default function ClientPage() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      alert("Please login to access the client dashboard.");
+      alert("Please login as a client to access the client dashboard.");
       router.push("/auth/login");
     }
   }, [router]);

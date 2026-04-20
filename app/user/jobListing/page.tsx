@@ -6,6 +6,7 @@ import { getJobs } from "../../../features/jobListing/api";
 import { applyToJob } from "../../../features/apply/applyForJob";
 import Link from "next/link";
 import DOMPurify from "dompurify";
+import { getUserRole } from "@/lib/auth";
 
 export default function JobsPage() {
   const router = useRouter();
@@ -44,8 +45,15 @@ export default function JobsPage() {
 
     if (!token) {
 
-      alert("Please login again to access the user dashboard.");
+      alert("Please login as a user to access the user dashboard.");
       router.push("/auth/login");
+      return;
+    }
+    const role = getUserRole(token);
+    if (role !== "USER") {
+      alert("Unauthorized access. Please login with a user account.");
+      router.push("/auth/login");
+      return;
     }
 
   }, [router]);

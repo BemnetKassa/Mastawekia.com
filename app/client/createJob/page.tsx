@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createJob } from "../../../features/createJob/api";
 import { getMyCompanies } from "../../../features/company/api";
 import RichTextEditor from "../../../component/ui/RichTextEditor";
+import { getUserRole } from "@/lib/auth";
 
 export default function CreateJobPage() {
   const router = useRouter();
@@ -16,6 +17,13 @@ export default function CreateJobPage() {
     const token = localStorage.getItem("token");
 
     if (!token) {
+      alert("Please login as a client to access the client dashboard.");
+      router.push("/auth/login");
+      return;
+    }
+    const role = getUserRole(token);
+    if (role !== "CLIENT") {
+      alert("Unauthorized access. Please login with a client account.");
       router.push("/auth/login");
       return;
     }

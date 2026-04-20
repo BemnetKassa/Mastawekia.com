@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import DashboardShell from "../../../component/shared/DashboardShell";
 import { getMyCompanies, createCompany } from "../../../features/company/api";
+import { getUserRole } from "../../../lib/auth";
 
 export default function CreateCompanyPage() {
   const router = useRouter();
@@ -13,6 +14,20 @@ export default function CreateCompanyPage() {
   const [companyId, setCompanyId] = useState("");
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login again to access the client dashboard.");
+      router.push("/auth/login");
+      return;
+    }
+    const role = getUserRole(token);
+    if (role !== "CLIENT") {
+      alert("Unauthorized access. Please login with a client account.");
+      router.push("/auth/login");
+      return;
+    }
+
+
     const fetchCompanies = async () => {
       try {
         const data = await getMyCompanies();

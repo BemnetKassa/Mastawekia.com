@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getApplications } from "../../../features/apply/getApplications";
 import { updateApplicationStatus } from "../../../features/apply/applicationStatus"
 import { useRouter } from "next/navigation";
+import { getUserRole } from "@/lib/auth";
 
 
 
@@ -21,6 +22,13 @@ export default function ApplicationsPage() {
     const token = localStorage.getItem("token");
 
     if (!token) {
+      alert("Please login as a client to access the client dashboard.");
+      router.push("/auth/login");
+      return;
+    }
+    const role = getUserRole(token);
+    if (role !== "CLIENT") {
+      alert("Unauthorized access. Please login with a client account.");
       router.push("/auth/login");
       return;
     }
