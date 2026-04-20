@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const decodeJwtPayload = (token: string): Record<string, unknown> | null => {
     try {
@@ -67,11 +68,13 @@ export default function LoginPage() {
       } else {
         router.push("/user");
       }
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : "Invalid email or password.";
-      alert(message);
+    } catch (err: any) {
+      // 🔥 THIS IS THE KEY PART
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
+
   };
 
   return (
@@ -128,6 +131,11 @@ export default function LoginPage() {
               className="w-full rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/80"
             />
           </div>
+          {error && (
+            <div className="bg-red-100 text-red-700 p-2 rounded mb-2">
+              {error}
+            </div>
+          )}
           <button
             onClick={handleLogin}
             disabled={loading}

@@ -13,6 +13,8 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("USER");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleRegister = async () => {
     if (!email || !password || !role) {
@@ -20,9 +22,16 @@ export default function RegisterPage() {
       return;
     }
 
-    await registerUser({ email, password, role });
-    alert("Registered successfully!");
-    router.push("/auth/login");
+    try {
+      setLoading(true);
+      await registerUser({ email, password, role });
+      alert("Registered successfully!");
+      router.push("/auth/login");
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -69,6 +78,11 @@ export default function RegisterPage() {
               <option value="CLIENT">Client</option>
             </select>
           </div>
+          {error && (
+            <div className="bg-red-100 text-red-700 p-2 rounded mb-2">
+              {error}
+            </div>
+          )}
           <button
             onClick={handleRegister}
             className="mt-6 w-full rounded-2xl bg-amber-400 px-4 py-3 text-sm font-semibold text-slate-900 transition hover:-translate-y-0.5 hover:bg-amber-300"
