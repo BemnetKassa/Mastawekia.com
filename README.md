@@ -1,36 +1,162 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mastawekia Frontend
+
+Frontend web app for the Mastawekia hiring platform, built with Next.js App Router, TypeScript, Tailwind CSS, and Tiptap.
+
+## Overview
+
+This project provides two user experiences:
+
+- User side: browse jobs, view job details, and apply.
+- Client side: create jobs, manage company profile, and review applications.
+
+Authentication is handled by API calls and token storage in `localStorage`, then route-based navigation to user or client dashboards.
+
+## Tech Stack
+
+- Next.js 16.2.1 (App Router)
+- React 19.2.4
+- TypeScript 5
+- Tailwind CSS 4
+- Tiptap editor
+- DOMPurify for rich-text sanitization
+
+## Main Features
+
+- Authentication
+  - Register with role selection (`USER` or `CLIENT`)
+  - Login and role-based redirect
+- Job discovery
+  - Fetch job listings
+  - Search by title and company
+  - Job details page
+- Applications
+  - Apply to jobs
+  - Track application status
+- Client tools
+  - Create job posts
+  - View applicants
+  - Company management pages
+
+## Route Map
+
+- `/landing`
+- `/auth/login`
+- `/auth/register`
+- `/user`
+- `/user/jobListing`
+- `/user/jobListing/[id]`
+- `/user/myApplications`
+- `/client`
+- `/client/createJob`
+- `/client/applications`
+- `/client/company`
+
+Root route `/` redirects to `/landing`.
+
+## Project Structure
+
+```text
+app/
+	auth/
+		login/
+		register/
+	client/
+		applications/
+		company/
+		createJob/
+	landing/
+	user/
+		jobListing/
+			[id]/
+		myApplications/
+	layout.tsx
+	page.tsx
+
+component/
+	shared/
+	ui/
+
+features/
+	auth/
+	jobListing/
+	createJob/
+	apply/
+	company/
+```
+
+## Environment Variables
+
+Create a `.env` file in the project root:
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
+
+Replace with your backend base URL.
 
 ## Getting Started
 
-First, run the development server:
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Start development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Available Scripts
 
-## Learn More
+- `npm run dev` - Start local development server
+- `npm run build` - Create production build
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
 
-To learn more about Next.js, take a look at the following resources:
+## Auth and API Notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Login and register requests use API helpers in `features/auth/`.
+- Job listing requests are in `features/jobListing/api.ts`.
+- Protected API calls attach bearer token from `localStorage` when available.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Troubleshooting
 
-## Deploy on Vercel
+### Error: Cannot find module `node_modules/next/dist/bin/next`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Cause: `node_modules` is incomplete or corrupted.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Fix:
+
+```bash
+rm -rf node_modules package-lock.json
+npm cache verify
+npm install
+npm run dev
+```
+
+For Windows PowerShell:
+
+```powershell
+rd /s /q node_modules
+del package-lock.json
+npm cache verify
+npm install
+npm run dev
+```
+
+### Warning about multiple lockfiles / incorrect Turbopack root
+
+If Next.js warns about lockfiles in parent directories, keep only the intended lockfile for this project or configure the Turbopack root in `next.config.ts`.
+
+## Notes
+
+- Rich text content is sanitized with DOMPurify before rendering.
+- UI uses custom typography and visual styles configured in global styles and layout.
