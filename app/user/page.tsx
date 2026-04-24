@@ -41,6 +41,8 @@ export default function UserPage() {
 
   }, [router]);
 
+
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     router.push("/auth/login");

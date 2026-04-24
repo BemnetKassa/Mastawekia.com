@@ -7,6 +7,7 @@ import DashboardShell from "../../component/shared/DashboardShell";
 import type { DashboardNavLink } from "../../component/shared/DashboardNav";
 import ActionCard from "../../component/ui/ActionCard";
 import MetricCard from "../../component/ui/MetricCard";
+import { getUserRole } from "@/lib/auth";
 
 const navLinks: DashboardNavLink[] = [
   { href: "/client", label: "Overview" },
@@ -30,6 +31,12 @@ export default function ClientPage() {
       alert("Please login as a client to access the client dashboard.");
       router.push("/auth/login");
     }
+    const role = getUserRole(token);
+    if (role != "CLIENT") {
+      alert("Unauthorized access. Please login with a client account.");
+      router.push("/auth/login");
+    }
+
   }, [router]);
 
   const handleLogout = () => {
