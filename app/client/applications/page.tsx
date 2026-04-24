@@ -12,6 +12,7 @@ type Application = {
   id: string | number;
   job?: { title?: string };
   user?: { email?: string };
+  status?: string;
 };
 
 export default function ApplicationsPage() {
