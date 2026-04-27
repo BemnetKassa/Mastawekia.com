@@ -12,6 +12,9 @@ export default function RegisterPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [role, setRole] = useState("USER");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -59,13 +62,46 @@ export default function RegisterPage() {
             <label className="block text-xs uppercase tracking-[0.25em] text-slate-400">
               Password
             </label>
-            <input
-              placeholder="Choose a strong password"
-              type="password"
-              className="w-full rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/80"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="relative">
+              <input
+                placeholder="Choose a strong password"
+                type={showPassword ? "text" : "password"}
+                className="w-full rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/80"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400 hover:text-slate-200"
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
+
+            <label className="block text-xs uppercase tracking-[0.25em] text-slate-400">
+              confirm password
+            </label>
+            <div className="relative">
+              <input
+                placeholder="confirm your password"
+                type={showConfirmPassword ? "text" : "password"}
+                className="w-full rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/80"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400 hover:text-slate-200"
+              >
+                {showConfirmPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
+            {password !== confirmPassword && (
+              <p className="text-red-500 text-sm">Passwords do not match</p>
+            )}
+
             <label className="block text-xs uppercase tracking-[0.25em] text-slate-400">
               Role
             </label>
@@ -85,9 +121,10 @@ export default function RegisterPage() {
           )}
           <button
             onClick={handleRegister}
+            disabled={loading}
             className="mt-6 w-full rounded-2xl bg-amber-400 px-4 py-3 text-sm font-semibold text-slate-900 transition hover:-translate-y-0.5 hover:bg-amber-300"
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
           <p className="mt-4 text-xs text-slate-400">
             Already have an account?{" "}

@@ -13,6 +13,7 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setshowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -100,12 +101,22 @@ export default function LoginPage() {
             <label className="block text-xs uppercase tracking-[0.25em] text-slate-400">
               Password
             </label>
-            <input
-              type="password"
-              placeholder="********"
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/80"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="********"
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/80"
+              />
+              <button
+                type="button"
+                onClick={() => setshowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400 hover:text-slate-200"
+              >
+                {showPassword ? "🙈" : "👁️"}
+
+              </button>
+            </div>
           </div>
           {error && (
             <div className="bg-red-100 text-red-700 p-2 rounded mb-2">
