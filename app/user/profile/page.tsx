@@ -23,7 +23,7 @@ export default function UserPage() {
   const router = useRouter();
 
   const [userData, setUserData] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
 
@@ -46,23 +46,24 @@ export default function UserPage() {
       return;
     }
 
-  }, [router]);
 
-  const normalizeProfileData = (data: any) => {
-    if (data?.profile) {
-      return data.profile;
+
+    const normalizeProfileData = (data: any) => {
+      if (data?.profile) {
+        return data.profile;
+      }
     }
-  }
 
-  useEffect(() => {
-
+    setIsLoading(true);
     getProfile()
       .then((data) => setUserData(normalizeProfileData(data)))
       .catch(() => {
         setUserData(null);
         alert("Failed to load profile data.");
       })
-  })
+      .finally(() => setIsLoading(false));
+  }
+    , [router]);
 
   return (
     <div className="min-h-screen px-6 py-12">

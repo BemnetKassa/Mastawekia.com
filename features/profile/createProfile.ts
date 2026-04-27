@@ -1,7 +1,6 @@
 const API = process.env.NEXT_PUBLIC_API_URL;
 
 export const createProfile = async (profileData: {
-  name: string;
   bio: string;
   skills: string[];
 }) => {
