@@ -13,6 +13,7 @@ const navLinks: DashboardNavLink[] = [
   { href: "/user", label: "Overview" },
   { href: "/user/jobListing", label: "Job listing" },
   { href: "/user/myApplications", label: "My applications" },
+  { href: "/user/profile", label: "Profile" },
 ];
 
 const metrics = [

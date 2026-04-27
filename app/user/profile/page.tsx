@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getUserRole } from "@/lib/auth";
 import { DashboardNavLink } from "@/component/shared/DashboardNav";
+import { createProfile } from "../../../features/profile/createProfile";
+import { getProfile } from "../../../features/profile/getProfile";
+import Link from "next/link";
+
 
 const navLinks: DashboardNavLink[] = [
   { href: "/user", label: "Overview" },
@@ -19,12 +23,13 @@ export default function UserPage() {
   const router = useRouter();
 
   const [userData, setUserData] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState();
   const [errorMessage, setErrorMessage] = useState("");
 
 
 
   useEffect(() => {
+
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -43,9 +48,64 @@ export default function UserPage() {
 
   }, [router]);
 
-
+  const normalizeProfileData = (data: any) => {
+    if (data?.profile) {
+      return data.profile;
+    }
+  }
 
   useEffect(() => {
 
+    getProfile()
+      .then((data) => setUserData(normalizeProfileData(data)))
+      .catch(() => {
+        setUserData(null);
+        alert("Failed to load profile data.");
+      })
   })
+
+  return (
+    <div className="min-h-screen px-6 py-12">
+      <div className="mx-auto w-full max-w-6xl space-y-10">
+        <header className="flex flex-col gap-6 rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-amber-200">
+                User Profile
+              </p>
+              <h1 className="font-display text-3xl text-white">Manage your profile</h1>
+              <p className="mt-2 text-sm text-slate-300">
+                View and update your profile information to enhance your job search experience.
+              </p>
+            </div>
+            <Link
+              href="/user"
+              className="rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-200 transition hover:border-amber-300 hover:text-amber-200"
+            >
+              Back to dashboard
+            </Link>
+          </div>
+        </header>
+
+        <section className="grid gap-6 lg:grid-cols-2">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+            {userData ? (
+              <div className="space-y-4">
+                <p><strong>Name:</strong> {userData.name}</p>
+              </div>
+            ) : (
+              <p className="text-sm text-slate-300">No profile data available.
+                <Link
+                  href="/user/profile/create"
+                  className="ml-2 rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-200 transition hover:border-amber-300 hover:text-amber-200">
+                  Create Profile
+                </Link>
+              </p>
+            )}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
 }
+
