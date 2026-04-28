@@ -97,9 +97,9 @@ export default function UserPage() {
             ) : (
               <p className="text-sm text-slate-300">No profile data available.
                 <Link
-                  href="/user/profile/create"
+                  href="/user/profile/update_profile"
                   className="ml-2 rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-200 transition hover:border-amber-300 hover:text-amber-200">
-                  Create Profile
+                  Update profile
                 </Link>
               </p>
             )}

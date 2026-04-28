@@ -6,12 +6,15 @@ import { createProfile } from "../../../../features/profile/createProfile";
 import { getProfile } from "../../../../features/profile/getProfile";
 import { getUserRole } from "@/lib/auth";
 import router from "next/dist/shared/lib/router/router";
+import { profile } from "console";
 
-export default function CreateProfilePage() {
+export default function UpdateProfilePage() {
   const router = useRouter();
 
   const [Loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [bio, setBio] = useState("");
+  const [skills, setSkills] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -26,13 +29,33 @@ export default function CreateProfilePage() {
       alert("Unauthorized access. Please login with a user account.");
       router.push("/auth/login");
       return;
+
     }
 
-  }
-    , [router]);
+    // Fetch existing profile data to pre-fill the form
+    const fetchProfile = async () => {
+      try {
+        const profile = await getProfile();
+        if (!profile) {
+          alert("No profile found. Please create a profile first.");
+          return;
+        }
+        setBio(profile.bio || "");
+        setSkills(profile.skills ? profile.skills.join(", ") : "");
 
-  const [bio, setBio] = useState("");
-  const [skills, setSkills] = useState("");
+      } catch (error: any) {
+        console.error("Failed to load profile:", error);
+        alert("Failed to load profile. Please try again.");
+
+        if (error.message === "Unauthorized") {
+          alert("Session expired. Please login again.");
+          router.push("/auth/login");
+        }
+      }
+
+    }
+  }, [router]);
+
 
   const handleSubmit = async () => {
     setLoading(true);
