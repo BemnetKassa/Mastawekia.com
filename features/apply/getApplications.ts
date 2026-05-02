@@ -10,5 +10,17 @@ export const getApplications = async () => {
     },
   });
 
+  if (res.status === 401) {
+    throw new Error("Unauthorized. Please login again.");
+  }
+  if (res.status === 403) {
+    throw new Error("Forbidden. You do not have access to this resource.");
+  }
+  if (res.status === 404) {
+    throw new Error("Applications not found.");
+  }
+  if (res.status === 500) {
+    throw new Error("Server error. Please try again later.");
+  }
   return res.json();
 };
