@@ -198,7 +198,7 @@ export default function JobsPage() {
             <div className="glass-panel rounded-3xl p-8 text-center text-sm text-slate-300">
               {isSearching
                 ? "Searching for new roles..."
-                : "No jobs yet. Check back soon for fresh openings."}
+                : "No job listings found. Try adjusting your search or filter criteria."}
             </div>
           ) : (
             jobs.map((job: any) => (
