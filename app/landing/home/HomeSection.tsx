@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function HomeSection() {
   return (
     <>
@@ -11,12 +13,6 @@ export default function HomeSection() {
             <p className="text-sm text-slate-300">Talent Studio</p>
           </div>
         </div>
-        <nav className="hidden items-center gap-6 text-sm text-slate-300 md:flex">
-          <a className="hover:text-white" href="#features">Features</a>
-          <a className="hover:text-white" href="#flow">Flow</a>
-          <a className="hover:text-white" href="#roles">Roles</a>
-          <a className="hover:text-white" href="#cta">Get started</a>
-        </nav>
         <div className="flex items-center gap-3">
           <a
             href="/auth/login"
