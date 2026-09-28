@@ -7,7 +7,14 @@ export const getJob = async (id: string) => {
     );
   }
 
-  const res = await fetch(`${API}/jobs/${id}`);
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${API}/jobs/${id}`, {
+    headers: token
+      ? {
+          Authorization: `Bearer ${token}`,
+        }
+      : undefined,
+  });
 
   if (!res.ok) {
     const errorText = await res.text();

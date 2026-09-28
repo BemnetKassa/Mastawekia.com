@@ -3,7 +3,7 @@ const API = process.env.NEXT_PUBLIC_API_URL;
 export type ApplicationPayload = {
   jobId: string;
   coverLetter: string;
-  resumeUrl: string;
+  resume: File;
   portfolioUrl?: string;
 };
 
@@ -17,13 +17,21 @@ export const applyToJob = async (payload: ApplicationPayload) => {
     throw new Error("You must be logged in to apply.");
   }
 
+  const formData = new FormData();
+  formData.append("jobId", payload.jobId);
+  formData.append("coverLetter", payload.coverLetter);
+  formData.append("resume", payload.resume);
+
+  if (payload.portfolioUrl) {
+    formData.append("portfolioUrl", payload.portfolioUrl);
+  }
+
   const res = await fetch(`${API}/applications`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(payload),
+    body: formData,
   });
 
   const data = await res.json().catch(() => null);

@@ -15,7 +15,7 @@ export default function JobDetailPage() {
   const [isApplying, setIsApplying] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [coverLetter, setCoverLetter] = useState("");
-  const [resumeUrl, setResumeUrl] = useState("");
+  const [resume, setResume] = useState<File | null>(null);
   const [portfolioUrl, setPortfolioUrl] = useState("");
 
   useEffect(() => {
@@ -44,8 +44,8 @@ export default function JobDetailPage() {
     setErrorMessage("");
     setIsApplying(true);
     try {
-      if (!coverLetter.trim() || !resumeUrl.trim()) {
-        setErrorMessage("Cover letter and resume link are required.");
+      if (!coverLetter.trim() || !resume) {
+        setErrorMessage("Cover letter and resume file are required.");
         setIsApplying(false);
         return;
       }
@@ -53,7 +53,7 @@ export default function JobDetailPage() {
       const res = await applyToJob({
         jobId: params.id,
         coverLetter: coverLetter.trim(),
-        resumeUrl: resumeUrl.trim(),
+        resume,
         portfolioUrl: portfolioUrl.trim() || undefined,
       });
       if (res) {
@@ -179,15 +179,17 @@ export default function JobDetailPage() {
               {!hasApplied && (
                 <div className="mt-6 space-y-4 border-t border-white/10 pt-6">
                   <label className="block text-xs uppercase tracking-[0.2em] text-slate-400">
-                    Resume link
+                    Resume file
                     <input
-                      type="url"
+                      type="file"
                       required
-                      placeholder="https://..."
-                      value={resumeUrl}
-                      onChange={(event) => setResumeUrl(event.target.value)}
-                      className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm normal-case tracking-normal text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/80"
+                      accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                      onChange={(event) => setResume(event.target.files?.[0] || null)}
+                      className="mt-2 block w-full rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm normal-case tracking-normal text-slate-100 file:mr-4 file:rounded-full file:border-0 file:bg-amber-400 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-slate-900 hover:file:bg-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-400/80"
                     />
+                    <span className="mt-2 block text-xs normal-case tracking-normal text-slate-500">
+                      PDF or Word document, up to the limit configured by the server.
+                    </span>
                   </label>
                   <label className="block text-xs uppercase tracking-[0.2em] text-slate-400">
                     Portfolio link <span className="normal-case tracking-normal text-slate-500">(optional)</span>
