@@ -127,6 +127,48 @@ http://localhost:3000
 - Job listing requests are in `features/jobListing/api.ts`.
 - Protected API calls attach bearer token from `localStorage` when available.
 
+## Application API Contract
+
+The application flow expects these backend endpoints. All endpoints require a
+Bearer token. A candidate is identified from the token; the client must not
+send a user ID from the browser.
+
+### Submit an application
+
+`POST /applications`
+
+Request body:
+
+```json
+{
+	"jobId": "job-id",
+	"coverLetter": "Why this role is a strong match...",
+	"resumeUrl": "https://files.example.com/resume.pdf",
+	"portfolioUrl": "https://portfolio.example.com"
+}
+```
+
+`coverLetter` and `resumeUrl` are required. `portfolioUrl` is optional. The
+server should reject duplicate applications for the same candidate and job
+with `409 Conflict`, and return the created application with `201 Created`.
+
+### Candidate application views
+
+- `GET /applications/me` - return the authenticated candidate's applications.
+- `GET /applications/:id` - return one application; candidates may only view
+	their own applications.
+
+### Client application views and status
+
+- `GET /applications` - return applications for jobs owned by the authenticated
+	client.
+- `PATCH /applications/:id/status` - update status with `{ "status":
+	"REVIEWING" | "SHORTLISTED" | "ACCEPTED" | "REJECTED" }`.
+
+Application responses should include `id`, `job`, `user`, `status`,
+`coverLetter`, `resumeUrl`, `portfolioUrl`, `createdAt`, and `updatedAt`.
+The server must enforce candidate/client ownership checks on every endpoint.
+
 ## Troubleshooting
 
 ### Error: Cannot find module `node_modules/next/dist/bin/next`

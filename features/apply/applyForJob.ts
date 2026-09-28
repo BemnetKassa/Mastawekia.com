@@ -1,6 +1,13 @@
 const API = process.env.NEXT_PUBLIC_API_URL;
 
-export const applyToJob = async (jobId: string) => {
+export type ApplicationPayload = {
+  jobId: string;
+  coverLetter: string;
+  resumeUrl: string;
+  portfolioUrl?: string;
+};
+
+export const applyToJob = async (payload: ApplicationPayload) => {
   if (!API) {
     throw new Error("API URL is not defined. Please set NEXT_PUBLIC_API_URL in your .env file.");
   }
@@ -10,11 +17,13 @@ export const applyToJob = async (jobId: string) => {
     throw new Error("You must be logged in to apply.");
   }
 
-  const res = await fetch(`${API}/applications/${jobId}`, {
+  const res = await fetch(`${API}/applications`, {
     method: "POST",
     headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
+    body: JSON.stringify(payload),
   });
 
   const data = await res.json().catch(() => null);
