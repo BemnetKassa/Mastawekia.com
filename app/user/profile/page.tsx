@@ -7,7 +7,7 @@ import Link from "next/link";
 
 import DashboardShell from "../../../component/shared/DashboardShell";
 import type { DashboardNavLink } from "../../../component/shared/DashboardNav";
-import { getProfile } from "../../../features/profile/getProfile";
+import { getProfile, normalizeProfile } from "../../../features/profile/getProfile";
 
 const navLinks: DashboardNavLink[] = [
   { href: "/user", label: "Overview" },
@@ -43,13 +43,14 @@ export default function UserProfilePage() {
     const fetchProfile = async () => {
       try {
         const res = await getProfile();
+        const profile = normalizeProfile(res);
 
-        if (!res || !res.bio) {
+        if (!profile || typeof profile !== "object") {
           setUserData(null);
           return;
         }
 
-        setUserData(res);
+        setUserData(profile);
       } catch (error: any) {
         console.error(error);
         setErrorMessage(error.message || "Failed to load profile.");
@@ -96,6 +97,20 @@ export default function UserProfilePage() {
         <main className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
           <section className="space-y-6">
             <div className="glass-panel rounded-3xl p-6">
+              <p className="text-xs uppercase tracking-[0.3em] text-amber-200">Candidate profile</p>
+              <h1 className="mt-2 font-display text-3xl text-white">
+                {userData.headline || "Your professional profile"}
+              </h1>
+              <div className="mt-4 flex flex-wrap gap-3 text-sm text-slate-300">
+                {userData.location && <span>{userData.location}</span>}
+                {userData.experienceYears !== undefined && <span>{userData.experienceYears} years experience</span>}
+                {userData.availability && <span>{userData.availability.replaceAll("_", " ")}</span>}
+              </div>
+              <p className="mt-6 whitespace-pre-wrap text-sm leading-7 text-slate-300">
+                {userData.bio || "Add a short introduction to help recruiters understand your strengths."}
+              </p>
+            </div>
+            <div className="glass-panel rounded-3xl p-6">
               <div className="flex items-center justify-between">
                 <h2 className="font-display text-xl text-white">Skills snapshot</h2>
                 <span className="rounded-full bg-amber-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-200">
@@ -115,6 +130,15 @@ export default function UserProfilePage() {
                 ) : (
                   <span className="text-sm text-slate-400">No skills listed yet.</span>
                 )}
+              </div>
+            </div>
+            <div className="glass-panel rounded-3xl p-6">
+              <h2 className="font-display text-xl text-white">Professional links</h2>
+              <div className="mt-4 flex flex-wrap gap-3 text-sm">
+                {userData.portfolioUrl && <a href={userData.portfolioUrl} target="_blank" rel="noreferrer" className="text-amber-200 hover:text-amber-100">Portfolio</a>}
+                {userData.linkedinUrl && <a href={userData.linkedinUrl} target="_blank" rel="noreferrer" className="text-amber-200 hover:text-amber-100">LinkedIn</a>}
+                {userData.githubUrl && <a href={userData.githubUrl} target="_blank" rel="noreferrer" className="text-amber-200 hover:text-amber-100">GitHub</a>}
+                {!userData.portfolioUrl && !userData.linkedinUrl && !userData.githubUrl && <span className="text-slate-400">No links added yet.</span>}
               </div>
             </div>
           </section>
