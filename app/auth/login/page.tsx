@@ -49,6 +49,9 @@ export default function LoginPage() {
       else if (role === "USER") {
         router.push("/user");
       }
+      else if (role === "ADMIN") {
+        router.push("/admin");
+      }
     } catch (err: any) {
       const message = err.message || "Something went wrong";
       setError(message);
