@@ -11,12 +11,14 @@ type AdminRecordRowProps = {
   record: AdminRecord;
   busy: boolean;
   onStatusChange: (status: AdminStatus) => void;
+  onView: () => void;
 };
 
 export default function AdminRecordRow({
   record,
   busy,
   onStatusChange,
+  onView,
 }: AdminRecordRowProps) {
   return (
     <div className="flex flex-col gap-4 py-5 lg:flex-row lg:items-center lg:justify-between">
@@ -56,7 +58,7 @@ export default function AdminRecordRow({
             <X size={14} /> Suspend
           </button>
         )}
-        <button className="inline-flex items-center gap-1 rounded-xl border border-white/10 px-3 py-2 text-xs text-slate-300 hover:border-amber-300/40 hover:text-amber-200">
+        <button onClick={onView} className="inline-flex items-center gap-1 rounded-xl border border-white/10 px-3 py-2 text-xs text-slate-300 hover:border-amber-300/40 hover:text-amber-200">
           View <ArrowUpRight size={14} />
         </button>
       </div>

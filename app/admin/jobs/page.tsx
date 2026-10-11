@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CircleAlert, Search } from "lucide-react";
 import AdminPageShell from "../../../component/admin/AdminPageShell";
 import AdminRecordRow from "../../../component/admin/AdminRecordRow";
+import AdminRecordDetails from "../../../component/admin/AdminRecordDetails";
 import { getUserRole } from "../../../lib/auth";
 import { getAdminOverview, updateAdminRecord, type AdminRecord, type AdminStatus } from "../../../features/admin/api";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,7 @@ export default function AdminJobsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [busyId, setBusyId] = useState("");
+  const [selectedJob, setSelectedJob] = useState<AdminRecord | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -51,8 +53,9 @@ export default function AdminJobsPage() {
       <section className="glass-panel rounded-3xl p-5 sm:p-7">
         <SectionHeader label="Live jobs" search={search} onSearch={setSearch} placeholder="Search jobs" />
         <SectionFeedback loading={loading} error={error} empty={!loading && filteredJobs.length === 0} label="jobs" />
-        {!loading && <div className="divide-y divide-white/10">{filteredJobs.map((job) => <AdminRecordRow key={job.id} record={job} busy={busyId === job.id} onStatusChange={(status) => updateJobStatus(job, status)} />)}</div>}
+        {!loading && <div className="divide-y divide-white/10">{filteredJobs.map((job) => <AdminRecordRow key={job.id} record={job} busy={busyId === job.id} onStatusChange={(status) => updateJobStatus(job, status)} onView={() => setSelectedJob(job)} />)}</div>}
       </section>
+      <AdminRecordDetails record={selectedJob} label="Jobs" onClose={() => setSelectedJob(null)} />
     </AdminPageShell>
   );
 }
