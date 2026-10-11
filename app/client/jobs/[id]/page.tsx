@@ -206,7 +206,7 @@ export default function ClientJobDetailsPage() {
               <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Applications</p>
             </div>
             <p className="mt-3 font-display text-4xl text-white">{job.applications?.length ?? 0}</p>
-            <button onClick={() => router.push("/client/applications")} className="mt-6 text-xs uppercase tracking-[0.2em] text-amber-200 hover:text-amber-100">
+            <button onClick={() => router.push(`/client/jobs/appdetail?jobId=${encodeURIComponent(job.id)}`)} className="mt-6 text-xs uppercase tracking-[0.2em] text-amber-200 hover:text-amber-100">
               Review applications →
             </button>
           </aside>

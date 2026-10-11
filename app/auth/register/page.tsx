@@ -19,13 +19,32 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const passwordIsValid =
+    password.length >= 6 &&
+    /[A-Za-z]/.test(password) &&
+    /\d/.test(password) &&
+    /[^A-Za-z\d]/.test(password);
+
   const handleRegister = async () => {
     if (!email || !password || !role) {
-      alert("Please fill in all fields.");
+      setError("Please fill in all fields.");
+      return;
+    }
+
+    if (!passwordIsValid) {
+      setError(
+        "Password must contain at least 6 characters, including a letter, a number, and a special character.",
+      );
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
       return;
     }
 
     try {
+      setError("");
       setLoading(true);
       await registerUser({ email, password, role });
       alert("Registered successfully!");
@@ -68,7 +87,10 @@ export default function RegisterPage() {
                 type={showPassword ? "text" : "password"}
                 className="w-full rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/80"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setError("");
+                }}
               />
               <button
                 type="button"
@@ -88,7 +110,10 @@ export default function RegisterPage() {
                 type={showConfirmPassword ? "text" : "password"}
                 className="w-full rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/80"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setError("");
+                }}
               />
               <button
                 type="button"
@@ -98,6 +123,11 @@ export default function RegisterPage() {
                 {showConfirmPassword ? "🙈" : "👁️"}
               </button>
             </div>
+            {password.length > 0 && !passwordIsValid && (
+              <p className="text-sm text-amber-300">
+                Use at least 6 characters with a letter, a number, and a special character.
+              </p>
+            )}
             {password !== confirmPassword && (
               <p className="text-red-500 text-sm">Passwords do not match</p>
             )}

@@ -8,12 +8,19 @@ export const registerUser = async (data: any) => {
     },
     body: JSON.stringify(data),
   });
-  if (res.status === 409) {
-    throw new Error("email already exists.");
-  } else if (res.status === 400) {
-    throw new Error(
-      "password must contain at least 6 caracter with number, letter and special character.",
-    );
+
+  if (!res.ok) {
+    const payload = await res.json().catch(() => null);
+    const backendMessage = payload?.message;
+    const message = Array.isArray(backendMessage)
+      ? backendMessage.join(", ")
+      : backendMessage;
+
+    if (res.status === 409) {
+      throw new Error("Email already exists.");
+    }
+
+    throw new Error(message || `Registration failed: ${res.status}`);
   }
 
   return res.json();
