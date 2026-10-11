@@ -12,6 +12,7 @@ import { ArrowLeft, BriefcaseBusiness, CheckCircle2, Lightbulb } from "lucide-re
 
 const navLinks: DashboardNavLink[] = [
   { href: "/client", label: "Overview" },
+  { href: "/client/jobs", label: "My jobs" },
   { href: "/client/createJob", label: "Create job" },
   { href: "/client/applications", label: "Applications" },
   { href: "/client/company", label: "Companies" },

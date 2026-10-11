@@ -17,6 +17,7 @@ type Company = {
 
 const navLinks: DashboardNavLink[] = [
   { href: "/client", label: "Overview" },
+  { href: "/client/jobs", label: "My jobs" },
   { href: "/client/createJob", label: "Create job" },
   { href: "/client/applications", label: "Applications" },
   { href: "/client/company", label: "Companies" },
