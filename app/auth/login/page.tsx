@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { loginUser } from "../../../features/auth/loginApi";
 import Link from "next/link";
 import { getUserRole } from "../../../lib/auth";
-
+import { toast, Toaster } from "sonner";
 
 
 export default function LoginPage() {
@@ -20,12 +20,16 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      alert("Please enter both email and password.");
+      const message = "Please enter both your email and password.";
+      setError(message);
+      toast.error(message);
       return;
     }
 
     try {
       setLoading(true);
+      setError("");
+
       const res = await loginUser({ email, password });
 
       if (typeof res?.access_token !== "string") {
@@ -33,7 +37,7 @@ export default function LoginPage() {
       }
 
       localStorage.setItem("token", res.access_token);
-      alert("Logged in successfully!");
+      toast.success("Logged in successfully!");
 
       const role = getUserRole(res.access_token);
       if (!role) {
@@ -46,8 +50,9 @@ export default function LoginPage() {
         router.push("/user");
       }
     } catch (err: any) {
-      // 🔥 THIS IS THE KEY PART
-      setError(err.message || "Something went wrong");
+      const message = err.message || "Something went wrong";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -55,7 +60,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen px-6 py-12">
+    <>
+      <Toaster richColors position="top-right" closeButton />
+      <div className="min-h-screen px-6 py-12">
       <Link href="/" className="mb-4 mx-4o inline-block rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-200 transition hover:border-amber-300 hover:text-amber-200">
         Back to Home
       </Link>
@@ -139,5 +146,6 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
