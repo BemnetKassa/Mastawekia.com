@@ -33,37 +33,11 @@ import {
 
 const navLinks: DashboardNavLink[] = [
   { href: "/admin", label: "Overview" },
-  { href: "/admin?section=jobs", label: "Jobs" },
-  { href: "/admin?section=applications", label: "Applications" },
-  { href: "/admin?section=users", label: "Users" },
-  { href: "/admin?section=companies", label: "Companies" },
+  { href: "/admin/jobs", label: "Jobs" },
+  { href: "/admin/applications", label: "Applications" },
+  { href: "/admin/users", label: "Users" },
+  { href: "/admin/companies", label: "Companies" },
 ];
-
-const previewData: AdminOverview = {
-  metrics: { totalUsers: 1248, activeJobs: 86, applications: 329, companies: 142 },
-  records: {
-    jobs: [
-      { id: "job-104", name: "Senior Product Designer", detail: "Nexa Labs", status: "ACTIVE", meta: "12 applicants", createdAt: "2 hours ago" },
-      { id: "job-103", name: "Frontend Engineer", detail: "Kora Studio", status: "PENDING", meta: "8 applicants", createdAt: "5 hours ago" },
-      { id: "job-102", name: "Growth Marketing Lead", detail: "Mastawekia", status: "ACTIVE", meta: "21 applicants", createdAt: "Yesterday" },
-    ],
-    applications: [
-      { id: "app-810", name: "Maya Bekele", detail: "Senior Product Designer", status: "PENDING", meta: "maya@example.com", createdAt: "12 min ago" },
-      { id: "app-809", name: "Daniel Tesfaye", detail: "Frontend Engineer", status: "ACTIVE", meta: "daniel@example.com", createdAt: "38 min ago" },
-      { id: "app-808", name: "Sara Alemu", detail: "Growth Marketing Lead", status: "SUSPENDED", meta: "sara@example.com", createdAt: "1 hour ago" },
-    ],
-    users: [
-      { id: "usr-201", name: "Maya Bekele", detail: "Candidate", status: "ACTIVE", meta: "maya@example.com", createdAt: "Joined today" },
-      { id: "usr-200", name: "Kora Studio", detail: "Client", status: "ACTIVE", meta: "hello@kora.studio", createdAt: "Joined yesterday" },
-      { id: "usr-199", name: "Abel Worku", detail: "Candidate", status: "PENDING", meta: "abel@example.com", createdAt: "Joined yesterday" },
-    ],
-    companies: [
-      { id: "co-41", name: "Nexa Labs", detail: "Technology", status: "ACTIVE", meta: "18 open roles", createdAt: "Verified today" },
-      { id: "co-40", name: "Kora Studio", detail: "Design", status: "PENDING", meta: "3 open roles", createdAt: "Needs review" },
-      { id: "co-39", name: "Mastawekia", detail: "Hiring platform", status: "ACTIVE", meta: "24 open roles", createdAt: "Verified 2 days ago" },
-    ],
-  },
-};
 
 const sectionLabels: Record<AdminSection, string> = {
   jobs: "Jobs",
@@ -93,10 +67,10 @@ function statusClasses(status: AdminStatus) {
 
 export default function AdminPage() {
   const router = useRouter();
-  const [data, setData] = useState(previewData);
+  const [data, setData] = useState<AdminOverview | null>(null);
   const [section, setSection] = useState<AdminSection>("jobs");
   const [query, setQuery] = useState("");
-  const [isPreview, setIsPreview] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [busyId, setBusyId] = useState("");
 
@@ -110,27 +84,29 @@ export default function AdminPage() {
     getAdminOverview()
       .then((overview) => {
         setData(overview);
-        setIsPreview(false);
       })
       .catch((requestError: Error) => {
         setError(requestError.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [router]);
 
   const records = useMemo(
     () =>
-      data.records[section].filter((record) =>
+      (data?.records[section] ?? []).filter((record) =>
         `${record.name} ${record.detail} ${record.meta}`
           .toLowerCase()
           .includes(query.toLowerCase()),
       ),
-    [data.records, query, section],
+    [data?.records, query, section],
   );
 
   const changeStatus = async (record: AdminRecord, status: AdminStatus) => {
     setBusyId(record.id);
     setError("");
-    setData((current) => ({
+    setData((current) => current && ({
       ...current,
       records: {
         ...current.records,
@@ -140,7 +116,7 @@ export default function AdminPage() {
       },
     }));
 
-    if (!isPreview) {
+    if (data) {
       try {
         await updateAdminRecord(section, record.id, status);
       } catch (requestError) {
@@ -175,7 +151,6 @@ export default function AdminPage() {
               <span className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-emerald-200">
                 <Activity size={13} /> System operational
               </span>
-              {isPreview && <span className="rounded-full border border-amber-300/20 bg-amber-300/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-amber-200">Preview data</span>}
             </div>
             <h2 className="mt-5 font-display text-3xl text-white sm:text-4xl">The decisions that shape every user&apos;s experience.</h2>
             <p className="mt-4 max-w-xl text-sm leading-6 text-slate-300">Review new activity, keep listings trustworthy, and give your support team the context to act quickly.</p>
@@ -186,7 +161,7 @@ export default function AdminPage() {
         {error && (
           <div className="flex items-start gap-3 rounded-2xl border border-amber-300/20 bg-amber-300/10 px-4 py-3 text-sm text-amber-100">
             <CircleAlert className="mt-0.5 shrink-0" size={17} />
-            <span><strong className="font-semibold">Backend connection:</strong> {error} The dashboard is showing preview records so the interface remains usable.</span>
+            <span><strong className="font-semibold">Backend connection:</strong> {error}</span>
           </div>
         )}
 
@@ -195,7 +170,7 @@ export default function AdminPage() {
             <div key={label} className="glass-panel relative rounded-3xl p-5">
               <Icon className={`absolute right-5 top-5 ${color}`} size={20} />
               <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{label}</p>
-              <p className="mt-3 font-display text-3xl text-white">{data.metrics[value].toLocaleString()}</p>
+              <p className="mt-3 font-display text-3xl text-white">{data?.metrics[value]?.toLocaleString() ?? "—"}</p>
               <p className="mt-1 text-xs text-slate-400">{helper}</p>
             </div>
           ))}
@@ -225,7 +200,8 @@ export default function AdminPage() {
           </div>
 
           <div className="mt-4 divide-y divide-white/10">
-            {records.map((record) => (
+            {isLoading && <p className="py-10 text-center text-sm text-slate-400">Loading live admin data...</p>}
+            {!isLoading && records.map((record) => (
               <div key={record.id} className="flex flex-col gap-4 py-5 lg:flex-row lg:items-center lg:justify-between">
                 <div className="flex min-w-0 items-start gap-4">
                   <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/5 text-xs font-semibold text-amber-200">{record.name.slice(0, 2).toUpperCase()}</div>
