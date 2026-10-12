@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginUser } from "../../../features/auth/loginApi";
 import Link from "next/link";
@@ -10,6 +10,10 @@ import { toast, Toaster } from "sonner";
 
 export default function LoginPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    toast.dismiss();
+  }, []);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

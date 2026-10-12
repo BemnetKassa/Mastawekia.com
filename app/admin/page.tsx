@@ -30,6 +30,7 @@ import {
   type AdminSection,
   type AdminStatus,
 } from "../../features/admin/api";
+import { toast } from "sonner";
 
 const navLinks: DashboardNavLink[] = [
   { href: "/admin", label: "Overview" },
@@ -128,7 +129,8 @@ export default function AdminPage() {
 
   const logout = () => {
     localStorage.removeItem("token");
-    router.push("/auth/login");
+    router.push("/auth/login")
+    toast.success("Logged out successfully.");
   };
 
   return (

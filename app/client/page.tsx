@@ -12,6 +12,7 @@ import { ArrowUpRight, BriefcaseBusiness, CalendarDays, Plus, Users } from "luci
 import { getMyCompanies } from "../../features/company/api";
 import { getApplications } from "../../features/apply/getApplications";
 import { getJobs } from "../../features/jobListing/api";
+import { toast } from "sonner";
 
 const navLinks: DashboardNavLink[] = [
   { href: "/client", label: "Overview" },
@@ -65,6 +66,7 @@ export default function ClientPage() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     router.push("/auth/login");
+    toast.success("Logged out successfully.")
   };
 
   const pendingApplications = dashboardData.applications.filter(

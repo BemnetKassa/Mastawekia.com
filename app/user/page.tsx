@@ -8,6 +8,7 @@ import type { DashboardNavLink } from "../../component/shared/DashboardNav";
 import ActionCard from "../../component/ui/ActionCard";
 import MetricCard from "../../component/ui/MetricCard";
 import { getUserRole } from "../../lib/auth";
+import { toast } from "sonner";
 
 const navLinks: DashboardNavLink[] = [
   { href: "/user", label: "Overview" },
@@ -47,6 +48,7 @@ export default function UserPage() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     router.push("/auth/login");
+    toast.success("Logged out successfully.");
   };
 
   return (
