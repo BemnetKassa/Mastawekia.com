@@ -5,13 +5,13 @@ import "./globals.css";
 const display = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  display: "swap",
 });
 
 const sans = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
