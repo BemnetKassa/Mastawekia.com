@@ -6,13 +6,27 @@ import Link from "next/link";
 import DOMPurify from "dompurify";
 import { getJob } from "../../../../features/jobListing/jobApi";
 import { applyToJob } from "../../../../features/apply/applyForJob";
+import { getMyApplications } from "../../../../features/apply/getMyApplications";
+
+type JobDetails = {
+  title?: string;
+  company?: { name?: string } | string;
+  createdAt?: string;
+  postedAt?: string;
+  location?: string;
+  workLocation?: string;
+  employmentType?: string;
+  type?: string;
+  description?: string;
+};
 
 export default function JobDetailPage() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
-  const [job, setJob] = useState<any>(null);
+  const [job, setJob] = useState<JobDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isApplying, setIsApplying] = useState(false);
+  const [hasApplied, setHasApplied] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [coverLetter, setCoverLetter] = useState("");
   const [resume, setResume] = useState<File | null>(null);
@@ -28,8 +42,38 @@ export default function JobDetailPage() {
 
     const loadJob = async () => {
       try {
-        const data = await getJob(params.id);
+        const [data, myApplicationsPayload] = await Promise.all([
+          getJob(params.id),
+          getMyApplications(),
+        ]);
+
+        const myApplications = Array.isArray(myApplicationsPayload)
+          ? myApplicationsPayload
+          : Array.isArray(myApplicationsPayload?.applications)
+            ? myApplicationsPayload.applications
+            : Array.isArray(myApplicationsPayload?.data)
+              ? myApplicationsPayload.data
+              : [];
+
+        const appliedToThisJob = myApplications.some((application: unknown) => {
+          if (typeof application !== "object" || application === null) {
+            return false;
+          }
+
+          const record = application as Record<string, unknown>;
+          const job = typeof record.job === "object" && record.job !== null
+            ? record.job as Record<string, unknown>
+            : null;
+          const applicationJobId =
+            record.jobId ??
+            job?.id ??
+            job?.jobId;
+
+          return String(applicationJobId) === String(params.id);
+        });
+
         setJob(data);
+        setHasApplied(appliedToThisJob);
       } catch (error: unknown) {
         alert(error instanceof Error ? error.message : "Failed to load job.");
       } finally {
@@ -58,12 +102,7 @@ export default function JobDetailPage() {
       });
       if (res) {
         alert("Application successful!");
-        setJob((prev: any) => ({
-          ...prev,
-          applications: Array.isArray(prev?.applications)
-            ? [...prev.applications, { id: "local" }]
-            : [{ id: "local" }],
-        }));
+        setHasApplied(true);
       } else {
         setErrorMessage("Application failed. Please try again.");
       }
@@ -95,10 +134,6 @@ export default function JobDetailPage() {
   const formattedPostedDate = postedDate
     ? new Date(postedDate).toLocaleDateString()
     : "Date unavailable";
-  const applicationCount = Array.isArray(job.applications)
-    ? job.applications.length
-    : 0;
-  const hasApplied = applicationCount > 0;
   const location = job.location || job.workLocation || "Location not specified";
   const employmentType = job.employmentType || job.type || "Full time";
 
